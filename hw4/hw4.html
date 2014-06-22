@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Homework4</title>
+
+<Style>
+
+h1 {font-family:Arial, Helvetica, sans-serif;font-size:30px;margin-top:200px}
+
+
+</style>
+
+
+<script language="javascript" type="text/javascript">
+
+function checkxml(){
+	
+	try{
+	var input_xml = document.getElementById("url").value;
+	
+	if(input_xml === "")
+	{
+		
+		alert("the text box is left empty!");
+	}
+	else
+	{
+		xmlDoc = loadXML(input_xml);
+		
+		parse_err_check(xmlDoc);
+		//conduct err check 
+			
+	}
+	}
+	catch(err)
+	{
+		alert("Error in XML file");
+	}
+}
+
+
+function loadXML(url) { 
+ if (window.XMLHttpRequest) 
+ {// code for IE7+, Firefox, Chrome, Opera, Safari 
+ xmlhttp=new XMLHttpRequest(); 
+ } 
+ else 
+ {// code for IE6, IE5 
+ xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+ } 
+
+xmlhttp.onreadystatechange=state_check;
+
+ xmlhttp.open("GET",url,false); 
+
+ xmlhttp.send(); //properties of XMLHTTPRequest 
+ xmlDoc=xmlhttp.responseXML; 
+ return xmlDoc; 
+ } 
+ 
+function state_check()  
+{  
+//document.getElementById("demo1").innerHTML = xmlhttp.status;
+//document.getElementById("demo2").innerHTML = xmlhttp.statusText;
+//document.getElementById("demo3").innerHTML = xmlhttp.responseText;
+
+  if(xmlhttp.status!=200 && xmlhttp.status!=0)  
+    {  
+      alert("Problem retrieving XML data:" +" "+xmlhttp.status +":"+xmlhttp.statusText+"\n"+xmlhttp.responseText); 
+	  
+	  throw "cannot load"; 
+    }
+}  
+
+function parse_err_check(xmlDoc)
+{
+	//try IE first
+	
+	try
+	{
+		if (xmlDoc.parseError.errorCode != 0)
+		{
+			throw "Error in XML file";
+		}
+		else
+		{
+			parse_xml(xmlDoc);
+		}
+	}
+	catch(err)
+	{
+		
+		//try other ways
+	
+			if (xmlDoc.documentElement.nodeName=="parsererror")
+			{
+				//document.getElementById("demo3").innerHTML = 				               "changed";
+				
+			throw "Error in XML file";
+			}
+			else
+		{
+			parse_xml(xmlDoc);
+		}
+	}
+}
+
+function parse_xml(xmlDoc)
+{
+	var ptitle = xmlDoc.documentElement;
+	
+	var kids = ptitle.childNodes;
+	
+	var nplant = 0;
+	//document.getElementById("demo1").innerHTML = nplant;
+	
+	for(i=0;i<kids.length;i++)
+	{
+		if(kids[i].nodeType==1)
+		{
+			if(kids[i].nodeName == "PLANT" || kids[i].nodeName == "Plant")
+			{
+				nplant++;
+				
+				//document.getElementById("demo1").innerHTML = nplant;
+			}
+		}
+	}
+	
+	if(nplant == 0)
+	{
+		throw "no Plant tag";
+	}
+
+/*		if(kids[1].nodeName != "PLANT" || kids[1].nodeName != "Plant")
+	{
+		throw "Error in XML file:No Plant";
+	}
+*/	
+	var twin = window.open("","Plant_Table","height = 800,width = 600,scrollbars=yes");
+    
+	var html_content = '<html><head><title>Plant Table</title></head><body><center><h1 id ="ph"></h1><table id="pt" border=2></table><center><noscript>';
+	
+	twin.document.write(html_content);
+	
+	var table_ele = twin.document.getElementById("pt");
+	
+	twin.document.getElementById("ph").innerHTML = "PLANT";
+	
+	//make the first row
+	
+	var td_val = twin.document.createElement("td");
+	var tr_val = twin.document.createElement("tr");
+	var tags = kids[1].childNodes;
+	if(tags.length<1)
+	{
+		twin.alert("not enough elements");
+	}
+	else
+	{
+		for(var i= 0;i<tags.length;i++)
+		{
+			if(tags[i].nodeType==1)
+			{
+				content=twin.document.createTextNode(tags[i].nodeName);
+				
+				td_val.appendChild(content);
+				
+				tr_val.appendChild(td_val);
+				
+				td_val = twin.document.createElement("td");
+			}
+		}
+		
+		twin.document.getElementById("pt").appendChild(tr_val);
+	}
+	var td_val = twin.document.createElement("td");
+	var tr_val = twin.document.createElement("tr");
+	for(var i=0;i<kids.length;i++)
+	{
+		if(kids[i].nodeName == "PLANT" ||kids[i].nodeName == "Plant")
+		{
+		var detail = kids[i].childNodes;
+		
+		for(var j=0;j<detail.length;j++)
+		{
+			if(detail[j].nodeType==1)
+			{
+				if(detail[j].nodeName == "IMAGE")
+				{
+					var img_url = "http://www-scf.usc.edu/~csci571/2014Spring/hw4/"+detail[j].childNodes[0].nodeValue;
+					node_img=twin.document.createElement("img");
+					node_img.src=img_url;
+					node_img.height = 200;
+					node_img.width = 200;
+					
+					td_val.appendChild(node_img);
+					tr_val.appendChild(td_val);
+					
+					td_val = twin.document.createElement("td");
+				}
+				else
+				{
+					var data = twin.document.createTextNode(detail[j].childNodes[0].nodeValue);
+					
+					td_val.appendChild(data);
+					
+					tr_val.appendChild(td_val);
+					
+					td_val = twin.document.createElement("td");
+				}
+			}
+		}
+		twin.document.getElementById("pt").appendChild(tr_val);		
+		tr_val = twin.document.createElement("tr");	
+		}
+	}
+	
+twin.document.close();
+}
+</script>
+
+</head>
+
+<body>
+
+<h1 align=center>Enter URL for Plant Catalog XML File</h1>
+<center>
+<form id="input_xml">
+	<input id="url" name="URL" type="text"> 
+	</form>	
+    <br>
+	<button onclick="checkxml();" id="btn">Submit Query</button>
+</center>
+
+<p id="demo1"></p>
+<p id="demo2"></p>
+<p id="demo3"></p>
+
+<noscript>
+
+</body>
+</html>

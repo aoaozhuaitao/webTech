@@ -1,0 +1,8 @@
+
+ <?php
+ 
+$company = $_GET["symbol"];
+			
+echo "<Name>$company<Name>";
+
+?>

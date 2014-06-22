@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<title> search stock </title>
+        <style type="text/css">
+		.toright {margin-left:-50px};
+		.addborder {border-style: solid ;border-width:medium};
+        </style>
+	</head>
+	
+	<body>
+    <center>
+    	<H1>Market Stock Search</h1>
+        <div>
+		<form id="searchform" action="" method="post">
+			Company Symbol:<input name="company" type=â€œtextâ€?>
+            <INPUT type=submit name="submit" value="Search">
+		</form>	
+    <p class="toright">Example:GOOG,MSFT,YHOO,FB,AAPL,...etc</p>	
+    </div class = "addborder">
+    </center>
+    <center><h2>Search Results</h2></center><h2>Google Inc.(GOOG)</h2><hr><table border="0"><tr><td  width="200">Prev Close:</td><td width="90">1,215.65</td><td  width="250">Day's Range:</td><td padding-left:0>1,192.14-1,207.84</td></tr><table border="0"><tr><td  width="200">Open:</td><td width="90">1,206.75</td><td  width="250">52wk Range:</td><td padding-left:0>761.26-1,228.88</td></tr>    
+    
+    
+	</body>
+	
+</html>

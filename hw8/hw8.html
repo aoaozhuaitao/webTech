@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+
+<title>hw8</title>
+
+<style type="text/css">
+html 
+{background-image:url(sm.jpg);
+padding:0;
+	 -moz-background-size:cover;
+    -webkit-background-size:cover;
+    -o-background-size:cover;
+    background-size:cover;
+}
+form{margin-top:200px}
+</style>
+
+
+<script type="text/javascript">
+    
+    var xmlhttp = false;
+    
+function checkValue()
+{
+	var symbol = document.getElementById("syl").value;
+	if( symbol == "" || symbol == null)
+	{
+		alert('Please enter company name/symbol');
+	}
+	else
+	{
+        var url = "http://cs-server.usc.edu:17897/examples/servlet/finance_search?input="+symbol;
+        
+		var rvalue = startAjax(url);
+	}
+}
+    
+
+function myCallback()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    document.getElementById("test").innerHTML=xmlhttp.responseText;
+    }
+  }
+
+    
+function startAjax(url)
+{
+document.getElementById("test").innerHTML = url;
+if (window.XMLHttpRequest) 
+ {// code for IE7+, Firefox, Chrome, Opera, Safari 
+ xmlhttp=new XMLHttpRequest(); 
+ } 
+ else 
+ {// code for IE6, IE5 
+ xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+ } 
+
+//xmlhttp.onreadystatechange=state_check;
+
+ xmlhttp.open("GET",url,false); 
+ xmlhttp.onreadystatechange = myCallback;
+xmlhttp.setRequestHeader("Connection", "Close");
+xmlhttp.setRequestHeader("Method", "GET" + url + "HTTP/1.1");
+xmlhttp.send();
+}
+</script>
+
+</head>
+
+
+
+<body>
+
+<center>
+<form id="compsyb">
+	<font color="white" size="4px">company: </font><input name="input" id="syl" type="text" size="40" placeholder="Enter company symbol"> <input id="submit" type="button" size="1.5" value="Search" onclick="checkValue();">
+</form>
+</center>
+<p id="test"></p>
+
+<noscript>
+</body>
+</html>
